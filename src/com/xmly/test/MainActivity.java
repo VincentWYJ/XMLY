@@ -264,7 +264,7 @@ public class MainActivity extends FragmentActivity
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				dialogPopup = new Dialog(mContext);
+				dialogPopup = new Dialog(mContext, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);  //R.style.mydialogstyle
     			dialogPopup.setContentView(R.layout.class_dialog_layout);
     			dialogPopup.setCanceledOnTouchOutside(true);
                 mGridView = (GridView) dialogPopup.findViewById(R.id.class_gridview);

@@ -8,4 +8,9 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="MyDialogStyle" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 </resources>

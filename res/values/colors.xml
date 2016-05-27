@@ -3,9 +3,9 @@
 
 	<color name="transparent_color">#00000000</color>
 	
-	<color name="statusbar_bg_color">#FF3F51B5</color>
+	<color name="statusbar_bg_color">#FF7986CB</color>
 	
-	<color name="actionbar_bg_color">#FF7986CB</color>
+	<color name="actionbar_bg_color">#FFC5CAE9</color>
 	
 	<color name="seekbar_bg_color">#FFC5CAE9</color>
 	<color name="seekbar_process_color">#FF3F51B5</color>
