@@ -1,10 +1,10 @@
 package com.xmly.test;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import com.xmly.test.constants.Constants;
 import com.xmly.test.fragment.Fragment0_ZongBang;
@@ -32,7 +32,7 @@ import com.xmly.test.fragment.Fragment7_JianKangYangSheng;
 import com.xmly.test.fragment.Fragment8_ShangYeCaiJing;
 import com.xmly.test.fragment.Fragment9_LiShiRenWen;
 import com.xmly.test.util.ToolUtil;
-import com.xmly.test1.R;
+import com.bumptech.glide.Glide;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
 import com.ximalaya.ting.android.opensdk.model.PlayableModel;
 import com.ximalaya.ting.android.opensdk.model.advertis.Advertis;
@@ -52,9 +52,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -63,12 +61,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.ButtonBarLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -82,10 +78,6 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-
-import net.tsz.afinal.FinalBitmap;
-import net.tsz.afinal.FinalHttp;
-import net.tsz.afinal.http.AjaxCallBack;
 
 public class MainActivity extends FragmentActivity
 {
@@ -124,8 +116,6 @@ public class MainActivity extends FragmentActivity
 	
 	private Context mContext;
 
-	private FinalBitmap mFinalBitmap;
-	private FinalHttp mFinalHttp;
 	private XmPlayerManager mPlayerManager;
 	private CommonRequest mXimalaya;
 
@@ -148,8 +138,6 @@ public class MainActivity extends FragmentActivity
 
 		mContext = MainActivity.this;
 		
-		mFinalHttp = new FinalHttp();
-		
 		mXimalaya = CommonRequest.getInstanse();
 		mXimalaya.init(mContext, mAppSecret);
 		mXimalaya.setDefaultPagesize(50);
@@ -158,11 +146,7 @@ public class MainActivity extends FragmentActivity
 		mPlayerManager.init(mNotificationId, null);
 		mPlayerManager.addPlayerStatusListener(mPlayerStatusListener);
 		mPlayerManager.addAdsStatusListener(mAdsListener);
-		mPlayerManager.getPlayerStatus();		
-
-		mFinalBitmap = FinalBitmap.create(mContext.getApplicationContext());
-		mFinalBitmap.configLoadingImage(R.drawable.ic_launcher);
-		mFinalBitmap.configLoadfailImage(R.drawable.ic_launcher);		
+		mPlayerManager.getPlayerStatus();				
 		
 		mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotification = createNotification();
@@ -288,7 +272,6 @@ public class MainActivity extends FragmentActivity
                 mSimpleAdapter = new SimpleAdapter(MainActivity.this, getData(), R.layout.class_item_layout, 
 	        		new String[]{"title"}, new int[]{R.id.class_item_textview});
                 mGridView.setAdapter(mSimpleAdapter);
-                //mGridView.setSelection(mViewPager.getCurrentItem());
                 dialogPopup.show();
                 
                 mBtnCancel.setOnClickListener(new OnClickListener() {
@@ -328,37 +311,6 @@ public class MainActivity extends FragmentActivity
 		super.onBackPressed();
 	}
 	
-	private String generateFilePath(String baseDir, String url)
-	{
-		if (TextUtils.isEmpty(baseDir))
-		{
-			baseDir = Environment.getExternalStorageDirectory() + "/img_chache/";
-		}
-		File dir = new File(baseDir);
-		if (dir.isFile())
-		{
-			dir.delete();
-		}
-		if (!dir.exists())
-		{
-			dir.mkdirs();
-		}
-		return baseDir + System.currentTimeMillis() + getSubfixByUrl(url);
-	}
-	
-	private String getSubfixByUrl(String url)
-	{
-		if (TextUtils.isEmpty(url))
-		{
-			return "";
-		}
-		if (url.contains("."))
-		{
-			return url.substring(url.lastIndexOf("."));
-		}
-		return ".jpg";
-	}
-	
 	class SlidingPagerAdapter extends FragmentPagerAdapter
 	{
 		public SlidingPagerAdapter(FragmentManager fm)
@@ -394,7 +346,7 @@ public class MainActivity extends FragmentActivity
 			Log.i(TAG, "onStartPlayAds, Ad:" + ad.getName() + ", pos:" + position);
 			if (ad != null)
 			{
-				mFinalBitmap.display(mSoundCover, ad.getImageUrl());
+				Glide.with(mContext).load(ad.getImageUrl()).into(mSoundCover);
 			}
 		}
 		
@@ -427,7 +379,7 @@ public class MainActivity extends FragmentActivity
 			PlayableModel model = mPlayerManager.getCurrSound();
 			if (model != null && model instanceof Track)
 			{
-				mFinalBitmap.display(mSoundCover, ((Track) model).getCoverUrlLarge());
+				Glide.with(mContext).load(((Track) model).getCoverUrlLarge()).into(mSoundCover);
 			}
 		}
 		
@@ -465,20 +417,18 @@ public class MainActivity extends FragmentActivity
 				String title = null;
 				String msg = null;
 				String coverUrl = null;
-				String coverSmall = null;
 				if (model instanceof Track)
 				{
 					Track info = (Track) model;
 					title = info.getTrackTitle();
 					msg = info.getAnnouncer() == null ? "" : info.getAnnouncer().getNickname();
 					coverUrl = info.getCoverUrlLarge();
-					coverSmall = info.getCoverUrlMiddle();
 				}
 				mTextView.setText(title);  //设置播放栏位信息
-				mFinalBitmap.display(mSoundCover, coverUrl);
-				if (!TextUtils.isEmpty(coverSmall))
+				Glide.with(mContext).load(coverUrl).into(mSoundCover);
+				if (!TextUtils.isEmpty(coverUrl))
 				{
-					updateRemoteViewIcon(coverSmall);
+					updateRemoteViewIcon(coverUrl);
 				}
 				else
 				{
@@ -513,36 +463,30 @@ public class MainActivity extends FragmentActivity
 
 		private void updateRemoteViewIcon(final String coverUrl)
 		{
-			mFinalHttp.download(coverUrl, generateFilePath(null, coverUrl), 
-				new AjaxCallBack<File>()
-				{
-	
-					@Override
-					public void onSuccess(File t)
-					{
-						Log.i(TAG, "download bitmap success : " + t.getAbsolutePath());
-						if (t == null || !t.exists())
-						{
-							return;
-						}
-						Bitmap bt = BitmapFactory.decodeFile(t.getAbsolutePath());
-						if (bt == null)
-						{
-							return;
-						}
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					 try {
+						Bitmap bt = Glide.with(mContext)  
+						    .load(coverUrl)  
+						    .asBitmap()
+						    .centerCrop()  
+						    .into(500, 500)  
+						    .get();
+						Log.i(TAG, "**********************");
 						mRemoteView.setImageViewBitmap(R.id.img_notifyIcon, bt);
 						mNotificationManager.notify(mNotificationId, mNotification);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ExecutionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-	
-					public void onFailure(Throwable t, int errorNo, String strMsg)
-					{
-						Log.i(TAG, "download bitmap error : " + errorNo + ", " + strMsg + ", " + t.getMessage());
-						Log.i(TAG, coverUrl);  //打印出图片链接, 目前notify栏的图片更新失败
-						Log.i(TAG, generateFilePath(null, coverUrl));
-						mRemoteView.setImageViewResource(R.id.img_notifyIcon, R.drawable.ic_launcher);
-						mNotificationManager.notify(mNotificationId, mNotification);
-					}
-				});
+				}
+			}).start();
 		}
 		
 		private void updateButtonStatus()

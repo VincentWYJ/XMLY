@@ -3,7 +3,7 @@ package com.xmly.test.fragment;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.tsz.afinal.FinalBitmap;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
 import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
@@ -47,7 +48,7 @@ public class Fragment18_ITKeJi extends BaseFragment
 
 	private CommonRequest mXimalaya;
 	private XmPlayerManager mPlayerManager;
-	private FinalBitmap mFinalBitmap;
+	
 
 	private IXmPlayerStatusListener mPlayerStatusListener = new IXmPlayerStatusListener()
 	{
@@ -200,9 +201,9 @@ public class Fragment18_ITKeJi extends BaseFragment
 
 		mPlayerManager.addPlayerStatusListener(mPlayerStatusListener);
 
-		mFinalBitmap = FinalBitmap.create(mContext);
-		mFinalBitmap.configLoadfailImage(R.drawable.ic_launcher);
-		mFinalBitmap.configLoadingImage(R.drawable.ic_launcher);
+		
+		
+		
 
 		mTrackAdapter = new TrackAdapter();
 		mListView.setAdapter(mTrackAdapter);
@@ -314,7 +315,7 @@ public class Fragment18_ITKeJi extends BaseFragment
 			holder.title.setText(sound.getTrackTitle());
 			holder.intro.setText(sound.getAnnouncer() == null ? sound
 					.getTrackTags() : sound.getAnnouncer().getNickname());
-			mFinalBitmap.display(holder.image, sound.getCoverUrlSmall());
+			Glide.with(mContext).load(sound.getCoverUrlLarge()).into(holder.image);
 			PlayableModel curr = mPlayerManager.getCurrSound();
 			if (sound.equals(curr))
 			{
