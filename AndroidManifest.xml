@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.xmly.test"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="23" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+	
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        
+        <meta-data
+            android:name="app_key"
+            android:value="b617866c20482d133d5de66fceb37da3" />
+            
+       	<meta-data
+            android:name="pack_id"
+            android:value="com.app.test.android" />
+
+        <activity
+            android:name="com.xmly.test.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <receiver android:name="com.xmly.test.receiver.PlayerControlReceiver"
+            android:exported="false" >
+            <intent-filter >
+                <action android:name="com.ximalaya.ting.android.opensdk.test.constants.ACTION_CONTROL_PLAY_PRE"/>
+                <action android:name="com.ximalaya.ting.android.opensdk.test.constants.ACTION_CONTROL_PLAY_PAUSE"/>
+                <action android:name="com.ximalaya.ting.android.opensdk.test.constants.ACTION_CONTROL_PLAY_NEXT"/>
+            </intent-filter>
+        </receiver>
+        
+        <service android:name="com.ximalaya.ting.android.opensdk.player.service.XmPlayerService" />
+        
+    </application>
+
+</manifest>

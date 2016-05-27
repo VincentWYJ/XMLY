@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<color name="transparent_color">#00000000</color>
+	
+	<color name="statusbar_bg_color">#ff000000</color>
+	
+	<color name="actionbar_bg_color">#ffffffff</color>
+	
+	<color name="seekbar_bg_color">#ffE0E0E0</color>
+	<color name="seekbar_process_color">#ffff0000</color>
+	<color name="seekbar_secondprocess_color">#ffff2222</color>
+	
+	<color name="list_item_selected_color">#ffffeeee</color>
+	
+	<color name="class_item_pressed_color">#ffffaaaa</color>
+	
+	<color name="red_color">#ffff0000</color>
+	<color name="white_color">#ffffffff</color>
+	<color name="black_color">#ff000000</color>
+	<color name="subblack_color">#ff666666</color>
+
+</resources>

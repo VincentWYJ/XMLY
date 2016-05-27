@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center" >
+
+	<TextView android:id="@+id/class_item_textview"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:padding="10dp"
+		android:textColor="@color/black_color"
+		android:textSize="15sp"
+		android:textStyle="bold"
+		android:background="@drawable/class_item_pressed_selector"
+		android:gravity="center"/>
+
+</LinearLayout>

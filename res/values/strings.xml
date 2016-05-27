@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">XMLY</string>
+    
+    <string name="music_name">名称</string>
+    <string name="music_info">信息</string>
+    <string name="text_more_class">更多</string>
+    <string name="text_cancel_button">取消</string>
+    <string name="text_select_class">请选择播放类别:</string>
+    <string name="no_music_playing">暂无播放内容</string>
+    
+</resources>
