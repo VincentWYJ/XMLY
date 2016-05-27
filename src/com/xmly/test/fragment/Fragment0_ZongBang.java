@@ -202,10 +202,6 @@ public class Fragment0_ZongBang extends BaseFragment
 
 		mPlayerManager.addPlayerStatusListener(mPlayerStatusListener);
 
-		
-		
-		
-
 		mTrackAdapter = new TrackAdapter();
 		mListView.setAdapter(mTrackAdapter);
 

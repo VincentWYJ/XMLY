@@ -266,12 +266,12 @@ public class MainActivity extends FragmentActivity
 				// TODO Auto-generated method stub
 				dialogPopup = new Dialog(mContext, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);  //R.style.mydialogstyle
     			dialogPopup.setContentView(R.layout.class_dialog_layout);
-    			dialogPopup.setCanceledOnTouchOutside(true);
                 mGridView = (GridView) dialogPopup.findViewById(R.id.class_gridview);
                 mBtnCancel  =(Button) dialogPopup.findViewById(R.id.cancel_button);
                 mSimpleAdapter = new SimpleAdapter(MainActivity.this, getData(), R.layout.class_item_layout, 
 	        		new String[]{"title"}, new int[]{R.id.class_item_textview});
                 mGridView.setAdapter(mSimpleAdapter);
+                dialogPopup.setCanceledOnTouchOutside(true);
                 dialogPopup.show();
                 
                 mBtnCancel.setOnClickListener(new OnClickListener() {
