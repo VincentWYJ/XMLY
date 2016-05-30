@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.zip.Inflater;
 
 import com.xmly.test.constants.Constants;
 import com.xmly.test.fragment.Fragment0_ZongBang;
@@ -63,8 +64,10 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -269,7 +272,19 @@ public class MainActivity extends FragmentActivity
                 mGridView = (GridView) dialogPopup.findViewById(R.id.class_gridview);
                 mBtnCancel  =(Button) dialogPopup.findViewById(R.id.cancel_button);
                 mSimpleAdapter = new SimpleAdapter(MainActivity.this, getData(), R.layout.class_item_layout, 
-	        		new String[]{"title"}, new int[]{R.id.class_item_textview});
+	        		new String[]{"title"}, new int[]{R.id.class_item_textview}){
+                	@Override
+                	public View getView(int position, View convertView, ViewGroup parent) {
+                		LayoutInflater mInflater = LayoutInflater.from(mContext);
+						convertView = mInflater.inflate(R.layout.class_item_layout, parent, false);
+						TextView mTextView = (TextView) convertView.findViewById(R.id.class_item_textview);
+						mTextView.setText(Titles[position]);
+						if(position == mViewPager.getCurrentItem()){
+						     mTextView.setBackgroundResource(R.color.class_item_pressed_bg_color);
+						}
+						return convertView;
+                	}
+                };
                 mGridView.setAdapter(mSimpleAdapter);
                 dialogPopup.setCanceledOnTouchOutside(true);
                 dialogPopup.show();
@@ -291,7 +306,21 @@ public class MainActivity extends FragmentActivity
 						if(mViewPager.getCurrentItem() != position){
 							mViewPager.setCurrentItem(position);
 						}
-						dialogPopup.cancel();
+						mSimpleAdapter.notifyDataSetChanged();
+						new Thread(new Runnable(){
+
+						     @Override
+						     public void run() {
+						          // TODO Auto-generated method stub
+						          try {
+						               Thread.sleep(10);
+						          } catch (InterruptedException e) {
+						               // TODO Auto-generated catch block
+						               e.printStackTrace();
+						          }
+						          dialogPopup.cancel();
+						     }				
+						}).start();
 					}
 				});
 			}
