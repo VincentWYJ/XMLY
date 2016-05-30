@@ -5,33 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.zip.Inflater;
-
 import com.xmly.test.constants.Constants;
-import com.xmly.test.fragment.Fragment0_ZongBang;
-import com.xmly.test.fragment.Fragment10_QingGanShengHuo;
-import com.xmly.test.fragment.Fragment12_XiangShengPingShu;
-import com.xmly.test.fragment.Fragment13_JiaoYuPeiXun;
-import com.xmly.test.fragment.Fragment14_BaiJiaJiangTan;
-import com.xmly.test.fragment.Fragment15_GuangBoJu;
-import com.xmly.test.fragment.Fragment16_XiQu;
-import com.xmly.test.fragment.Fragment17_DianTai;
-import com.xmly.test.fragment.Fragment18_ITKeJi;
-import com.xmly.test.fragment.Fragment4_YuLe;
-import com.xmly.test.fragment.Fragment3_YouShengShu;
-import com.xmly.test.fragment.Fragment1_ZiXun;
-import com.xmly.test.fragment.Fragment20_XiaoYuan;
-import com.xmly.test.fragment.Fragment21_QiChe;
-import com.xmly.test.fragment.Fragment22_LvYou;
-import com.xmly.test.fragment.Fragment23_DianYing;
-import com.xmly.test.fragment.Fragment24_DongManYouXi;
-import com.xmly.test.fragment.Fragment2_YinYue;
-import com.xmly.test.fragment.Fragment31_JiaoYuPeiXun;
-import com.xmly.test.fragment.Fragment5_WaiYu;
-import com.xmly.test.fragment.Fragment6_ErTong;
-import com.xmly.test.fragment.Fragment7_JianKangYangSheng;
-import com.xmly.test.fragment.Fragment8_ShangYeCaiJing;
-import com.xmly.test.fragment.Fragment9_LiShiRenWen;
+import com.xmly.test.fragment.Fragment_BangDan;
 import com.xmly.test.util.ToolUtil;
 import com.bumptech.glide.Glide;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
@@ -45,7 +20,7 @@ import com.ximalaya.ting.android.opensdk.player.XmPlayerManager;
 import com.ximalaya.ting.android.opensdk.player.advertis.IXmAdsStatusListener;
 import com.ximalaya.ting.android.opensdk.player.service.IXmPlayerStatusListener;
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException;
-
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -82,6 +57,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+@SuppressLint("ViewHolder")
 public class MainActivity extends FragmentActivity
 {
 	private static final String TAG = "MusicFragment";
@@ -125,8 +101,6 @@ public class MainActivity extends FragmentActivity
 	private boolean mUpdateProgress = true;
 	
 	private List<BaseFragment> fragmentList;
-
-	public static int indexFragment = 0; 
 	
 	@Override
 	protected void onCreate(Bundle arg0)
@@ -156,33 +130,19 @@ public class MainActivity extends FragmentActivity
 		mNotificationId = (int)System.currentTimeMillis();
 		
 		fragmentList = new ArrayList<BaseFragment>();
-		fragmentList.add(new Fragment0_ZongBang());
-		fragmentList.add(new Fragment1_ZiXun());
-		fragmentList.add(new Fragment2_YinYue());
-		fragmentList.add(new Fragment3_YouShengShu());
-		fragmentList.add(new Fragment4_YuLe());
-		fragmentList.add(new Fragment5_WaiYu());
-		
-		fragmentList.add(new Fragment6_ErTong());
-		fragmentList.add(new Fragment7_JianKangYangSheng());
-		fragmentList.add(new Fragment8_ShangYeCaiJing());
-		fragmentList.add(new Fragment9_LiShiRenWen());
-		fragmentList.add(new Fragment10_QingGanShengHuo());
-		fragmentList.add(new Fragment12_XiangShengPingShu());
-		
-		fragmentList.add(new Fragment13_JiaoYuPeiXun());
-		fragmentList.add(new Fragment14_BaiJiaJiangTan());
-		fragmentList.add(new Fragment15_GuangBoJu());
-		fragmentList.add(new Fragment16_XiQu());
-		fragmentList.add(new Fragment17_DianTai());
-		fragmentList.add(new Fragment18_ITKeJi());
-		
-		fragmentList.add(new Fragment20_XiaoYuan());
-		fragmentList.add(new Fragment21_QiChe());
-		fragmentList.add(new Fragment22_LvYou());
-		fragmentList.add(new Fragment23_DianYing());
-		fragmentList.add(new Fragment24_DongManYouXi());
-		fragmentList.add(new Fragment31_JiaoYuPeiXun());
+		for(int i=0; i<24; ++i){
+			int position = 0;
+			if(i<11){
+				position = i;
+			}else if(i<18){
+				position = i+1;
+			}else if(i<23){
+				position = i+2;
+			}else if(i<24){
+				position = i+8;
+			}
+			fragmentList.add(new Fragment_BangDan(position));
+		}
 
 		mTextView = (TextView) findViewById(R.id.message);
 		mSoundCover = (ImageView) findViewById(R.id.sound_cover);
@@ -197,7 +157,7 @@ public class MainActivity extends FragmentActivity
 		
 		mViewPagerAdapter = new SlidingPagerAdapter(getSupportFragmentManager());
 		
-		mViewPager.setOffscreenPageLimit(2); //参数默认为1,即当不指定或者指定值小于1时系统会当做1处理,一般同时缓存的有三页; 如置为2则一般同时缓存的页面数为5
+		mViewPager.setOffscreenPageLimit(24); //参数默认为1,即当不指定或者指定值小于1时系统会当做1处理,一般同时缓存的有三页; 如置为2则一般同时缓存的页面数为5
 		mViewPager.setAdapter(mViewPagerAdapter);
 
 		mTabLayout.setupWithViewPager(mViewPager);
@@ -275,14 +235,21 @@ public class MainActivity extends FragmentActivity
 	        		new String[]{"title"}, new int[]{R.id.class_item_textview}){
                 	@Override
                 	public View getView(int position, View convertView, ViewGroup parent) {
-                		LayoutInflater mInflater = LayoutInflater.from(mContext);
-						convertView = mInflater.inflate(R.layout.class_item_layout, parent, false);
-						TextView mTextView = (TextView) convertView.findViewById(R.id.class_item_textview);
+                		View view;  
+                		if (convertView == null) {  
+                			LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                			view = mInflater.inflate(R.layout.class_item_layout, parent, false);
+	        			} else {  
+	        				view = convertView;  
+	        			}
+						TextView mTextView = (TextView) view.findViewById(R.id.class_item_textview);
 						mTextView.setText(Titles[position]);
 						if(position == mViewPager.getCurrentItem()){
-						     mTextView.setBackgroundResource(R.color.class_item_pressed_bg_color);
+							mTextView.setBackgroundResource(R.color.class_item_pressed_bg_color);
+						}else{
+							mTextView.setBackgroundResource(R.color.class_item_normal_bg_color);
 						}
-						return convertView;
+						return view;
                 	}
                 };
                 mGridView.setAdapter(mSimpleAdapter);
@@ -305,22 +272,24 @@ public class MainActivity extends FragmentActivity
 						// TODO Auto-generated method stub
 						if(mViewPager.getCurrentItem() != position){
 							mViewPager.setCurrentItem(position);
-						}
-						mSimpleAdapter.notifyDataSetChanged();
-						new Thread(new Runnable(){
+							mSimpleAdapter.notifyDataSetChanged();  //更新操作作用于方法getView(position, view, parent)
+							new Thread(new Runnable(){
 
-						     @Override
-						     public void run() {
-						          // TODO Auto-generated method stub
-						          try {
-						               Thread.sleep(10);
-						          } catch (InterruptedException e) {
-						               // TODO Auto-generated catch block
-						               e.printStackTrace();
-						          }
-						          dialogPopup.cancel();
-						     }				
-						}).start();
+							     @Override
+							     public void run() {
+							          // TODO Auto-generated method stub
+							          try {
+							               Thread.sleep(10);
+							               dialogPopup.cancel();
+							          } catch (InterruptedException e) {
+							               // TODO Auto-generated catch block
+							               e.printStackTrace();
+							          }
+							     }				
+							}).start();
+						}else{
+							dialogPopup.cancel();
+						}
 					}
 				});
 			}
@@ -328,16 +297,34 @@ public class MainActivity extends FragmentActivity
 	}
 
 	@Override
-	public void onBackPressed()
-	{
-		Log.i(TAG, "onBackPressed");
+	public void onDestroy(){
+		super.onDestroy();
+		Log.i(TAG, "MainActivity onDestroy");
 		if (mPlayerManager != null)
 		{
 			mPlayerManager.stop();
 			mPlayerManager.removePlayerStatusListener(mPlayerStatusListener);
+			mPlayerManager.removeAdsStatusListener(mAdsListener);
 			mPlayerManager.release();
 		}
-		super.onBackPressed();
+		if(mNotificationManager != null){
+			mNotificationManager.cancelAll();
+		}
+	}
+
+	public void RefreshData(View view){
+		Log.i(TAG, "refresh data");
+		for(int i=0;i<24;++i){
+			fragmentList.get(i).refresh();
+		}
+	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		Log.i(TAG, "onBackPressed");
+		moveTaskToBack(true);
+		//super.onBackPressed();
 	}
 	
 	class SlidingPagerAdapter extends FragmentPagerAdapter
